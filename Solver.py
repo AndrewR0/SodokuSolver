@@ -11,27 +11,31 @@ class Solve:
 
     def validate(self, board, pos, num):
         
-        T = np.array(board)
+        T = np.array(board) #numpy makes matrices easier :)
 
         tempRow = T[pos[0]] #extract row from matrix
         tempCol = T[:,pos[1]] #extract col from matrix
 
-        row = [i for i in tempRow if i != 0]
+        #------rows/cols------
+        #0's represent empty positions on the board
+        #Consider only the values that are not 0's
+        row = [i for i in tempRow if i != 0] 
         col = [j for j in tempCol if j != 0]
-        #print(row, col)
 
+        #if there are multiple instances of a single number in a row or col, then this will catch the invalid placement
         if len(set(row)) != len(row) or len(set(col)) != len(col):
             return False
         
-        #box (4,1)
+        #------box------
+        #temp values for the row and col of the n^1/2 x n^1/2 positions. In a 9x9 board, these will be the 3x3 box positions the value that
+        # is being check resides
         r = int(pos[0] / self.factor)
         c = int(pos[1] / self.factor)
 
-        #print(r,c)
-
+        #iterate through the box
         for x in range(self.factor):
             for y in range(self.factor):
-                val = board[x + r*3][y + c*3]
+                val = board[x + r*3][y + c*3] #get the value of each position in the box
                 if val != 0 and val == num:
                     return False
                 else:
