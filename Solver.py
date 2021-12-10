@@ -1,6 +1,5 @@
 import numpy as np
 from board import board
-import math
 
 class Solve:
     def __init__(self, board):
@@ -58,7 +57,17 @@ class Solve:
                 output += "- - - - - - - - -\n"
         return output
 
+    #Use later to generate a board to any size (as long as the size is a perfect square)
+    def generateBoard(self, size):
+        root = size**0.5
+        if int(root + 0.5) ** 2 == size:
+            board = [[0 for i in range(size)] for j in range(size)]
+            return board
+        return "Size needs to be a perfect square"
+
+
 if __name__ == '__main__':
     x = Solve(board)
+    #print(x.generateBoard(16))
     print(x.printBoard(board))
     print(x.validate(board, (8,8), 9))
