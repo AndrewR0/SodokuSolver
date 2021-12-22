@@ -78,27 +78,26 @@ class Solve:
                 output += "- "*self.rows + "\n"
         return output
 
-
-#Use later to generate a board to any size (as long as the size is a perfect square)
+'''
 #Return a 2D matrix
 def generateBoard(size):
+    with open('board.csv', 'w', newline='') as board:
+        yo = csv.writer(board, delimiter = ' ', quotechar = '|', quoting=csv.QUOTE_MINIMAL)
+        
+        for row in range(9):
+            yo.writerow([0]*9)
     root = size**0.5
     if int(root + 0.5) ** 2 == size:
         board = [[0 for _ in range(size)] for _ in range(size)]
         #return Solve.printBoard(board)
         return board
     return "Size needs to be a perfect square"
-
-
+'''
 if __name__ == '__main__':
-    with open('board.csv', 'w', newline='') as board:
-        yo = csv.writer(board, delimiter = ' ', quotechar = '|', quoting=csv.QUOTE_MINIMAL)
-        
-        for row in range(9):
-            yo.writerow([0]*9)
+
     #board = generateBoard(9) #Figure out how to generate a board with random numbers 
     #print(board)
-    #x = Solve(board)
-    #print(x.printBoard(board))
-    #print(x.solve())
-    #print(x.printBoard(board))
+    x = Solve(board)
+    print(x.printBoard(board))
+    print(x.solve())
+    print(x.printBoard(board))
