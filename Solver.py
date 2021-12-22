@@ -6,8 +6,9 @@ class Solve:
         #self.board = board
         self.rows = len(board)
         self.cols = len(board[0])
-        self.factor = int(self.rows ** 0.5) #
+        self.factor = int(self.rows ** 0.5) #The board can only be made up of perfect squares (just how it be) so this variable is the square root of that value
 
+    #Determines whether the number at the inputted posistion is valid
     def validate(self, board, pos, num):
         
         T = np.array(board) #numpy makes matrices easier :)
@@ -34,15 +35,30 @@ class Solve:
         #iterate through the box
         for x in range(self.factor):
             for y in range(self.factor):
-                val = board[x + r*3][y + c*3] #get the value of each position in the box
-                if val != 0 and val == num:
+                xSkew = x + r*self.factor
+                ySkew = y + c*self.factor
+                #print(xSkew, ySkew, board[xSkew][ySkew], pos)
+                val = board[xSkew][ySkew] #get the value of each position in the box
+                if (xSkew,ySkew) != pos and val != 0 and val == num:
                     return False
                 else:
                     continue
+        return True
 
-    def solve(self, board):
-        pass
-    
+    def solve(self):        
+        for i in range(self.rows):
+            for j in range(self.cols):
+                #Empty cell
+                if board[i][j] == 0:
+                    for num in range(1,self.rows+1):
+                        board[i][j] = num
+                        if self.validate(board, (i,j), num):
+                            if self.solve():
+                                return True
+                        board[i][j] = 0
+                    return False
+        return True
+        
     def printBoard(self, board): #done for a 9x9, maybe change later for make for nxn (check if the n's are perfect squares)
         output = ""
         for i in range(self.rows):
@@ -57,17 +73,23 @@ class Solve:
                 output += "- - - - - - - - -\n"
         return output
 
-    #Use later to generate a board to any size (as long as the size is a perfect square)
-    def generateBoard(self, size):
-        root = size**0.5
-        if int(root + 0.5) ** 2 == size:
-            board = [[0 for i in range(size)] for j in range(size)]
-            return board
-        return "Size needs to be a perfect square"
 
+#Use later to generate a board to any size (as long as the size is a perfect square)
+#Need to debug this, not returning correct board layout with printBoard
+#Return a 2D matrix
+'''
+def generateBoard(self, board, size):
+    root = size**0.5
+    if int(root + 0.5) ** 2 == size:
+        board = [[0 for i in range(size)] for j in range(size)]
+        return self.printBoard(board)
+    return "Size needs to be a perfect square"
+'''
 
 if __name__ == '__main__':
     x = Solve(board)
     #print(x.generateBoard(16))
     print(x.printBoard(board))
-    print(x.validate(board, (8,8), 9))
+    #print(x.validate(board, (8,8), 9))
+    print(x.solve())
+    print(x.printBoard(board))
