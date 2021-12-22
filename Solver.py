@@ -1,4 +1,7 @@
 import numpy as np
+import csv
+import random
+import time
 from board import board
 
 class Solve:
@@ -45,7 +48,8 @@ class Solve:
                     continue
         return True
 
-    def solve(self):        
+    #Solves the sudoku board
+    def solve(self):
         for i in range(self.rows):
             for j in range(self.cols):
                 #Empty cell
@@ -58,38 +62,43 @@ class Solve:
                         board[i][j] = 0
                     return False
         return True
-        
-    def printBoard(self, board): #done for a 9x9, maybe change later for make for nxn (check if the n's are perfect squares)
+    
+    #prints a nxn board
+    def printBoard(self, board): 
         output = ""
         for i in range(self.rows):
             for j in range(self.cols):
-                if (j+1) % 3 == 0 and j != 0 and j != self.cols-1:
+                if (j+1) % self.factor == 0 and j != 0 and j != self.cols-1:
                     output += str(board[i][j]) + "|"
                 else:
                     output += str(board[i][j]) + " "
             output += "\n"
             
-            if (i+1) % 3 == 0 and i != 0 and i != self.rows-1:
-                output += "- - - - - - - - -\n"
+            if (i+1) % self.factor == 0 and i != 0 and i != self.rows-1:
+                output += "- "*self.rows + "\n"
         return output
 
 
 #Use later to generate a board to any size (as long as the size is a perfect square)
-#Need to debug this, not returning correct board layout with printBoard
 #Return a 2D matrix
-'''
-def generateBoard(self, board, size):
+def generateBoard(size):
     root = size**0.5
     if int(root + 0.5) ** 2 == size:
-        board = [[0 for i in range(size)] for j in range(size)]
-        return self.printBoard(board)
+        board = [[0 for _ in range(size)] for _ in range(size)]
+        #return Solve.printBoard(board)
+        return board
     return "Size needs to be a perfect square"
-'''
+
 
 if __name__ == '__main__':
-    x = Solve(board)
-    #print(x.generateBoard(16))
-    print(x.printBoard(board))
-    #print(x.validate(board, (8,8), 9))
-    print(x.solve())
-    print(x.printBoard(board))
+    with open('board.csv', 'w', newline='') as board:
+        yo = csv.writer(board, delimiter = ' ', quotechar = '|', quoting=csv.QUOTE_MINIMAL)
+        
+        for row in range(9):
+            yo.writerow([0]*9)
+    #board = generateBoard(9) #Figure out how to generate a board with random numbers 
+    #print(board)
+    #x = Solve(board)
+    #print(x.printBoard(board))
+    #print(x.solve())
+    #print(x.printBoard(board))
