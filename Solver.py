@@ -25,7 +25,7 @@ class Solver:
 
         self.bounding_box_len = int(math.sqrt(self.board_height))
 
-        # Preprocessing submatrices
+        # Preprocessing submatrix bounds
         self.bounding_limits = []
         current_index = 0
         for _ in range(self.bounding_box_len):
@@ -45,10 +45,15 @@ class Solver:
         return True
 
     def valid_box(self, x_coord: int, y_coord: int, possible_num: int) -> bool:
-        ...
+        x_bound, y_bound = self.get_xy_bounds(x_coord, y_coord)
+
+        flattened = self.board[y_bound[0]:y_bound[1], x_bound[0]:x_bound[1]].flatten()
+
+        if possible_num in flattened:
+            return False
+        return True
 
     def get_xy_bounds(self, x_coord: int, y_coord: int) -> tuple:
-        
         x_bound = None
         y_bound = None
         for bounds in self.bounding_limits:
@@ -60,8 +65,9 @@ class Solver:
         return (x_bound, y_bound)
 
     def valid_placement(self, x_coord: int, y_coord: int, possible_num: int) -> bool:
-        '''Function to call the valid functions at once'''
-        ...
+        if self.valid_row(y_coord, possible_num) and self.valid_column(x_coord, possible_num) and self.valid_box(x_coord, y_coord, possible_num):
+            return True
+        return False
 
     def solve(self) -> list:
         print("Solving...")
