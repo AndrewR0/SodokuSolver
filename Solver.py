@@ -13,18 +13,16 @@ BOARD = [[1,2,3,4,5,6,7,8,9],
 
 class Solver:
     def __init__(self, board: list):
-        self.board = np.array(board)
-        # print(self.board[:,5])
-        self.board_height = len(self.board)
-
-        if not all(len(row) == self.board_height for row in self.board):
-            for _ in self.board:
+        try:
+            self.board = np.array(board)
+        except ValueError:
+            for _ in board:
                 print(_)
-            raise ValueError("Board shape is not square!")
-
+            print("Board shape is not square!")
+            return
+        self.board_height = len(self.board)
         self.board_width = len(self.board[0])
 
-        #TODO: There probably needs to be a check somewhere to make sure the size of the board is actually square
         self.bounding_box_len = int(math.sqrt(self.board_height))
 
         # Preprocessing submatrices
@@ -32,11 +30,9 @@ class Solver:
         current_index = 0
         for _ in range(self.bounding_box_len):
             start = current_index
-            stop = start + self.bounding_box_len - 1
-            current_index = stop + 1
-            self.bounding_limits.append((start, stop))
-        
-        print(self.bounding_limits)
+            stop = start + self.bounding_box_len
+            current_index = stop
+            self.bounding_limits.append((start, stop)) # Note: The range is exclusive -> 0,3 does not include 3
 
     def valid_row(self, y_coord: int, possible_num: int) -> bool:
         if possible_num in self.board[y_coord,:]:
@@ -51,8 +47,20 @@ class Solver:
     def valid_box(self, x_coord: int, y_coord: int, possible_num: int) -> bool:
         ...
 
+    def get_xy_bounds(self, x_coord: int, y_coord: int) -> tuple:
+        
+        x_bound = None
+        y_bound = None
+        for bounds in self.bounding_limits:
+            if bounds[0] <= x_coord <= bounds[1]:
+                x_bound = bounds
+            if bounds[0] <= y_coord <= bounds[1]:
+                y_bound = bounds
+
+        return (x_bound, y_bound)
+
     def valid_placement(self, x_coord: int, y_coord: int, possible_num: int) -> bool:
-        '''Function to call the above valid functions at once'''
+        '''Function to call the valid functions at once'''
         ...
 
     def solve(self) -> list:
