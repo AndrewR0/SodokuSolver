@@ -74,6 +74,6 @@ class Solver:
     
 
 if __name__ == "__main__":
-    board = BOARD
-    Solver(board).solve()
-    # ...
+    # board = BOARD
+    # Solver(board).solve()
+    ...
